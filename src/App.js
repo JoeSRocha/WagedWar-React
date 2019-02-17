@@ -1,33 +1,56 @@
 import React, { Component } from 'react';
-import ChooseAthlete from './ChooseAthlete';
+import Table from './Table';
+import Form from './Form';
 import './App.css';
 
 class App extends Component {
 
+  state = {
+    characters: [
+      {
+        'name': 'Anderson Silva',
+        'job': 'Middleweight'
+    },
+    {
+        'name': 'Mac',
+        'job': 'Bouncer'
+    },
+    {
+        'name': 'Dee',
+        'job': 'Aspring actress'
+    },
+    {
+        'name': 'Dennis',
+        'job': 'Bartender'
+    }
+
+    ]
+  };
+
+  removeCharacter = index => {
+    const { characters } = this.state;
+
+    this.setState({
+        characters: characters.filter((character, i) => {
+            return i !== index;
+        })
+    });
+  }
+
+  handleSubmit = character => {
+    this.setState({characters: [...this.state.characters, character]});
+  }
 
   render() {
-    const athletes = [
-      {
-          'name': 'Anderson Silva',
-          'job': 'Middleweight'
-      },
-      {
-          'name': 'Mac',
-          'job': 'Bouncer'
-      },
-      {
-          'name': 'Dee',
-          'job': 'Aspring actress'
-      },
-      {
-          'name': 'Dennis',
-          'job': 'Bartender'
-      }
-  ];
+    const characters = this.state.characters;
 
     return (
       <div className="container">
-        <ChooseAthlete athleteData={athletes} />
+        <Table
+          characterData={characters}
+          removeCharacter={this.removeCharacter}
+        />
+        <Form handleSubmit={this.handleSubmit} />
       </div>
     )
   }
