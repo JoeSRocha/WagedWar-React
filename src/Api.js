@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-
+import './css/Athletes.css';
 
 const Athletes = props => {
 	const athletedata = props.athleteData.map((athlete, index) => {
 		return (
 			<div key={index}>
-			{athlete.athlete_name}
 			<ToggleAttributes
+				name={athlete.athlete_name}
 				nickname={athlete.nickname}
 				piv={athlete.piv}
 				weight={athlete.weight}
@@ -39,6 +39,7 @@ class ToggleAttributes extends Component {
 	}
 
 	render () {
+		const name         = this.props.name;
 		const nickname     = this.props.nickname;
 		const piv          = this.props.piv;
 		const weight       = this.props.weight;
@@ -50,26 +51,26 @@ class ToggleAttributes extends Component {
 		if ( this.state.isExpanded ) {
 			return (
 				<div>
+				<div className="dropdown-athlete" onClick={this.toggleAttributes}>
+					{name}
+				</div>
 					<ul>
-						{ nickname && <li>Nickname: {nickname}</li> }
-						{ piv && <li>PIV: {piv}</li> }
-						{ weight && <li>Weight: {weight}</li> }
-						{ record && <li>Weight: {record}</li> }
-						{ betting_odds && <li>betting_odds: {betting_odds}</li> }
-						{ reach && <li>betting_odds: {reach}</li> }
-						{ age && <li>Age: {age}</li> }
+						{ piv          && <li><b>Win Points:</b> {piv}</li> }
+						{ record       && <li><b>Record:</b> {record}</li> }
+						{ age          && <li><b>Age:</b> {age}</li> }
+						{ nickname     && <li><b>Nickname:</b> {nickname}</li> }
+						{ weight       && <li><b>Weight:</b> {weight}</li> }
+						{ reach        && <li><b>Reach:</b> {reach}</li> }
+						{ betting_odds && <li><b>Betting odds:</b> {betting_odds}</li> }
 					</ul>
-				<button onClick={this.toggleAttributes}>
-			 		Close
-				</button>
 				</div>
 			);
 		} else {
 			return (
 				<div>
-					<button onClick={this.toggleAttributes}>
-						[+]
-					</button>
+					<div className="dropdown-athlete" onClick={this.toggleAttributes}>
+						{name}
+					</div>
 				</div>
 			)
 		}
@@ -85,7 +86,7 @@ class App extends Component {
 
 	// Code is invoked after the component is mounted/inserted into the DOM tree.
 	componentDidMount() {
-		const url = "http://wagedwar.test/wp-json/athletes/v1/event?id=60";
+		const url = "https://wagedwar.com/wp-json/athletes/v1/event?id=60";
 
 		fetch(url)
 			.then(result => result.json())
