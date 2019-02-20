@@ -55,7 +55,7 @@ class ToggleAttributes extends Component {
 				<div className="dropdown-athlete" onClick={this.toggleAttributes}>
 					{name}
 				</div>
-					<ul>
+					<ul className="dropdown-attributes">
 						{ piv          && <li><b>Win Points:</b> {piv}</li> }
 						{ record       && <li><b>Record:</b> {record}</li> }
 						{ age          && <li><b>Age:</b> {age}</li> }
