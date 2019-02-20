@@ -1,4 +1,13 @@
 
+@font-face {
+  font-family: 'KlavikaBold';
+  src: url('../fonts/Klavika-Bold.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Klavika';
+  src: url('../fonts/Klavika-Regular.otf') format('opentype');
+}
+
 
 .dropdown-athlete {
   background: rgba(0,0,0,0);
