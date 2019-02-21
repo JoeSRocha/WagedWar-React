@@ -3,24 +3,59 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './css/Athletes.css';
 
 const Athletes = props => {
-	const athletedata = props.athleteData.map((athlete, index) => {
+	var pairedAthletes = [];
+	var pairedAthlete = [];
+	const athleteData = props.athleteData.map((athlete, index) => {
+
+		// Pair up athletes
+		pairedAthlete.push(athlete);
+		// If even Index
+		if ( index%2 !== 0 ) {
+			pairedAthletes.push(pairedAthlete);
+			pairedAthlete = [];
+		}
+
 		return (
 			<div key={index}>
-			<ToggleAttributes
-				name={athlete.athlete_name}
-				nickname={athlete.nickname}
-				piv={athlete.piv}
-				weight={athlete.weight}
-				record={athlete.record}
-				betting_odds={athlete.betting_odds}
-				reach={athlete.reach}
-				age={athlete.age}
-			/>
+				<ToggleAttributes
+					name={athlete.athlete_name}
+					nickname={athlete.nickname}
+					piv={athlete.piv}
+					weight={athlete.weight}
+					record={athlete.record}
+					betting_odds={athlete.betting_odds}
+					reach={athlete.reach}
+					age={athlete.age}
+				/>
 			</div>
 		);
 	});
 
-	return <div>{athletedata}</div>
+	const athletesPaired = pairedAthletes.map((pair, index) => {
+		return (
+
+			<div className='paired'>
+			{/* {	pair.map((athlete, index) => {
+					<div key={index}>
+						<ToggleAttributes
+							name={athlete.athlete_name}
+							nickname={athlete.nickname}
+							piv={athlete.piv}
+							weight={athlete.weight}
+							record={athlete.record}
+							betting_odds={athlete.betting_odds}
+							reach={athlete.reach}
+							age={athlete.age}
+						/>
+					</div>
+				}) }; */}
+			</div>
+
+		);
+
+	});
+
+	return <div>{athleteData}</div>
 }
 
 class ToggleAttributes extends Component {
@@ -51,10 +86,10 @@ class ToggleAttributes extends Component {
 
 		if ( this.state.isExpanded ) {
 			return (
-				<div>
-				<div className="dropdown-athlete" onClick={this.toggleAttributes}>
-					{name}
-				</div>
+				<div className="athlete-box">
+					<div className="dropdown-athlete" onClick={this.toggleAttributes}>
+						{name}
+					</div>
 					<ul className="dropdown-attributes">
 						{ piv          && <li><b>Win Points:</b> {piv}</li> }
 						{ record       && <li><b>Record:</b> {record}</li> }
@@ -68,11 +103,9 @@ class ToggleAttributes extends Component {
 			);
 		} else {
 			return (
-				<div>
 					<div className="dropdown-athlete" onClick={this.toggleAttributes}>
 						{name}
 					</div>
-				</div>
 			)
 		}
 	}
@@ -102,9 +135,7 @@ class App extends Component {
 		const { data } = this.state;
 
 		return (
-			<div>
 				<Athletes	athleteData = {data} />
-			</div>
 		);
 	}
 
