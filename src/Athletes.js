@@ -2,60 +2,31 @@ import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './css/Athletes.css';
 
-const Athletes = props => {
+const Athlete = props => {
 	var pairedAthletes = [];
 	var pairedAthlete = [];
-	const athleteData = props.athleteData.map((athlete, index) => {
 
-		// Pair up athletes
-		pairedAthlete.push(athlete);
-		// If even Index
-		if ( index%2 !== 0 ) {
-			pairedAthletes.push(pairedAthlete);
-			pairedAthlete = [];
-		}
+	const athletesPaired = props.athleteData.map((athlete, index) => {
 
-		return (
-			<div key={index}>
-				<ToggleAttributes
-					name={athlete.athlete_name}
-					nickname={athlete.nickname}
-					piv={athlete.piv}
-					weight={athlete.weight}
-					record={athlete.record}
-					betting_odds={athlete.betting_odds}
-					reach={athlete.reach}
-					age={athlete.age}
-				/>
-			</div>
-		);
-	});
+			// Pair up athletes
+			pairedAthlete.push(athlete);
+			// If even Index
+			if ( index%2 !== 0 ) {
+				pairedAthletes.push(pairedAthlete);
+				pairedAthlete = [];
+			}
+			if (pairedAthlete.length > 0) {
 
-	const athletesPaired = pairedAthletes.map((pair, index) => {
-		return (
-
-			<div className='paired'>
-			{/* {	pair.map((athlete, index) => {
-					<div key={index}>
-						<ToggleAttributes
-							name={athlete.athlete_name}
-							nickname={athlete.nickname}
-							piv={athlete.piv}
-							weight={athlete.weight}
-							record={athlete.record}
-							betting_odds={athlete.betting_odds}
-							reach={athlete.reach}
-							age={athlete.age}
-						/>
+				return (
+					<div>
+						<ToggleAttributes pairedAthlete={pairedAthlete} />
 					</div>
-				}) }; */}
-			</div>
-
-		);
+				);
+			}
 
 	});
 
-	return <div>{athleteData}</div>
+	return <div>{athletesPaired}</div>
 }
 
 class ToggleAttributes extends Component {
@@ -75,39 +46,57 @@ class ToggleAttributes extends Component {
 	}
 
 	render () {
-		const name         = this.props.name;
-		const nickname     = this.props.nickname;
-		const piv          = this.props.piv;
-		const weight       = this.props.weight;
-		const record       = this.props.record;
-		const betting_odds = this.props.betting_odds;
-		const reach        = this.props.reach;
-		const age          = this.props.age;
+		var output = [];
+		this.props.pairedAthlete.map(( athlete, key ) => {
 
-		if ( this.state.isExpanded ) {
-			return (
-				<div className="athlete-box">
-					<div className="dropdown-athlete" onClick={this.toggleAttributes}>
-						{name}
-					</div>
-					<ul className="dropdown-attributes">
-						{ piv          && <li><b>Win Points:</b> {piv}</li> }
-						{ record       && <li><b>Record:</b> {record}</li> }
-						{ age          && <li><b>Age:</b> {age}</li> }
-						{ nickname     && <li><b>Nickname:</b> {nickname}</li> }
-						{ weight       && <li><b>Weight:</b> {weight}</li> }
-						{ reach        && <li><b>Reach:</b> {reach}</li> }
-						{ betting_odds && <li><b>Betting odds:</b> {betting_odds}</li> }
-					</ul>
-				</div>
-			);
-		} else {
-			return (
-					<div className="dropdown-athlete" onClick={this.toggleAttributes}>
-						{name}
-					</div>
-			)
-		}
+			if ( this.state.isExpanded ) {
+				output = (
+						<div className="dropdown-athlete" onClick={this.toggleAttributes}>
+							{athlete.athlete_name}
+						</div>
+				)
+			} else {
+				output = (<div className="dropdown-athlete" onClick={this.toggleAttributes}>{athlete.athlete_name}</div>);
+			}
+
+		})
+
+		return output;
+
+		// const name         = this.props.name;
+		// const nickname     = this.props.nickname;
+		// const piv          = this.props.piv;
+		// const weight       = this.props.weight;
+		// const record       = this.props.record;
+		// const betting_odds = this.props.betting_odds;
+		// const reach        = this.props.reach;
+		// const age          = this.props.age;
+
+		// if ( this.state.isExpanded ) {
+		// 	return (
+		// 		<div className="athlete-box">
+		// 			<div className="dropdown-athlete" onClick={this.toggleAttributes}>
+		// 				{name}
+		// 			</div>
+		// 			<ul className="dropdown-attributes">
+		// 				{ piv          && <li><b>Win Points:</b> {piv}</li> }
+		// 				{ record       && <li><b>Record:</b> {record}</li> }
+		// 				{ age          && <li><b>Age:</b> {age}</li> }
+		// 				{ nickname     && <li><b>Nickname:</b> {nickname}</li> }
+		// 				{ weight       && <li><b>Weight:</b> {weight}</li> }
+		// 				{ reach        && <li><b>Reach:</b> {reach}</li> }
+		// 				{ betting_odds && <li><b>Betting odds:</b> {betting_odds}</li> }
+		// 			</ul>
+		// 		</div>
+		// 	);
+		// } else {
+		// 	return (
+		// 			<div className="dropdown-athlete" onClick={this.toggleAttributes}>
+		// 				{name}
+		// 			</div>
+		// 	)
+		// }
+
 	}
 }
 
@@ -135,7 +124,7 @@ class App extends Component {
 		const { data } = this.state;
 
 		return (
-				<Athletes	athleteData = {data} />
+				<Athlete	athleteData = {data} />
 		);
 	}
 
