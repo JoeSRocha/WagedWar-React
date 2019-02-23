@@ -45,57 +45,41 @@ class ToggleAttributes extends Component {
     }));
 	}
 
-	render () {
-		var output = [];
-		this.props.pairedAthlete.map(( athlete, key ) => {
 
-			if ( this.state.isExpanded ) {
-				output = (
+	buildList(){
+		return this.props.pairedAthlete.map((athlete) => {
+			if(this.state.isExpanded){
+				return (
+					<div>
 						<div className="dropdown-athlete" onClick={this.toggleAttributes}>
 							{athlete.athlete_name}
 						</div>
-				)
+							<ul className="dropdown-attributes">
+							{ athlete.piv          && <li><b>Win Points:</b> {athlete.piv}</li> }
+							{ athlete.record       && <li><b>Record:</b> {athlete.record}</li> }
+							{ athlete.age          && <li><b>Age:</b> {athlete.age}</li> }
+							{ athlete.nickname     && <li><b>Nickname:</b> {athlete.nickname}</li> }
+							{ athlete.weight       && <li><b>Weight:</b> {athlete.weight}</li> }
+							{ athlete.reach        && <li><b>Reach:</b> {athlete.reach}</li> }
+							{ athlete.betting_odds && <li><b>Betting odds:</b> {athlete.betting_odds}</li> }
+						</ul>
+					</div>
+					)
 			} else {
-				output = (<div className="dropdown-athlete" onClick={this.toggleAttributes}>{athlete.athlete_name}</div>);
+				return (
+					<div className="dropdown-athlete" onClick={this.toggleAttributes}>{athlete.athlete_name}</div>
+				)
 			}
-
 		})
+	}
 
-		return output;
+	render () {
 
-		// const name         = this.props.name;
-		// const nickname     = this.props.nickname;
-		// const piv          = this.props.piv;
-		// const weight       = this.props.weight;
-		// const record       = this.props.record;
-		// const betting_odds = this.props.betting_odds;
-		// const reach        = this.props.reach;
-		// const age          = this.props.age;
-
-		// if ( this.state.isExpanded ) {
-		// 	return (
-		// 		<div className="athlete-box">
-		// 			<div className="dropdown-athlete" onClick={this.toggleAttributes}>
-		// 				{name}
-		// 			</div>
-		// 			<ul className="dropdown-attributes">
-		// 				{ piv          && <li><b>Win Points:</b> {piv}</li> }
-		// 				{ record       && <li><b>Record:</b> {record}</li> }
-		// 				{ age          && <li><b>Age:</b> {age}</li> }
-		// 				{ nickname     && <li><b>Nickname:</b> {nickname}</li> }
-		// 				{ weight       && <li><b>Weight:</b> {weight}</li> }
-		// 				{ reach        && <li><b>Reach:</b> {reach}</li> }
-		// 				{ betting_odds && <li><b>Betting odds:</b> {betting_odds}</li> }
-		// 			</ul>
-		// 		</div>
-		// 	);
-		// } else {
-		// 	return (
-		// 			<div className="dropdown-athlete" onClick={this.toggleAttributes}>
-		// 				{name}
-		// 			</div>
-		// 	)
-		// }
+		return (
+			<div>
+				{this.buildList()}
+			</div>
+		);
 
 	}
 }
