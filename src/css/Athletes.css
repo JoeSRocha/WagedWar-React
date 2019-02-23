@@ -9,7 +9,15 @@
 }
 
 body {
-  font-family: 'Klavika', Helvetica, Arial, sans-serif;
+  font-family: 'KlavikaBold', 'Klavika', Helvetica, Arial, sans-serif;
+}
+
+.athletes-paired {
+  display: flex;
+}
+
+img.athlete-img {
+  height: 100px;
 }
 
 .dropdown-athlete {
@@ -17,10 +25,10 @@ body {
   text-align: center;
   width: 200px;
   margin: auto;
-  background: #000;
-  color: #fff;
+  color: #000;
   margin-bottom: 20px;
   cursor: pointer;
+  text-transform: uppercase;
 }
 
 .dropdown-attributes {
