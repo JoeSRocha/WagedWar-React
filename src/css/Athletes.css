@@ -12,7 +12,7 @@ body {
   font-family: 'KlavikaBold', 'Klavika', Helvetica, Arial, sans-serif;
 }
 
-.athletes-paired {
+.athletes-box {
   display: flex;
 }
 
@@ -26,7 +26,6 @@ img.athlete-img {
   width: 200px;
   margin: auto;
   color: #000;
-  margin-bottom: 20px;
   cursor: pointer;
   text-transform: uppercase;
 }
