@@ -60,14 +60,46 @@ const AthletesPaired = props => {
 }
 
 class AthletesBox extends Component {
+	versusBox() {
+		return this.props.pairedAthlete.map((athlete, index) => {
+			if(index%2 === 0) {
+				return(
+					<>
+						<div className="vs">{athlete.weight_class}</div>
+						<div className="athlete-name">{athlete.athlete_name}</div>
+						<div className="vs">VS</div>
+					</>
+				)
+			} else {
+				return(
+					<div className="athlete-name">{athlete.athlete_name}</div>
+				)
+			}
 
-	constructor(props) {
-    super(props)
+		});
 	}
 
 	buildList(){
-		return this.props.pairedAthlete.map((athlete) => {
-			return (<div key={athlete.lineup}><SingleAthlete athlete={athlete} /></div>)
+		return this.props.pairedAthlete.map((athlete, index) => {
+
+			// Add Versus Box
+			if ( index%2 !== 0 ) {
+
+				return (<>
+						<div key={athlete.lineup}className="col-6 versus-box">
+							{this.versusBox()}
+						</div>
+						<div key={athlete.athlete_name} className="col-3">
+							<SingleAthlete athlete={athlete} />
+						</div></>
+				)
+			}
+
+			return (<>
+					<div key={athlete.athlete_name} className="col-3">
+						<SingleAthlete athlete={athlete} />
+					</div></>
+			)
 		});
 	}
 
@@ -120,9 +152,8 @@ class SingleAthlete extends Component {
 		if (this.state.positionLeft) {
 			return (
 				<>
-					<img alt={athlete.athlete_name} className="athlete-img" src={this.state.athleteImg} />
+					<img width="185" height="539" alt={athlete.athlete_name} className="athlete-img" src={this.state.athleteImg} />
 					<div className="dropdown-athlete">
-						{athlete.athlete_name}
 					</div>
 				</>
 			)
@@ -130,9 +161,8 @@ class SingleAthlete extends Component {
 			return (
 				<>
 					<div className="dropdown-athlete">
-						{athlete.athlete_name}
 					</div>
-					<img alt={athlete.athlete_name} className="athlete-img" src={this.state.athleteImg} />
+					<img width="185" height="539" alt={athlete.athlete_name} className="athlete-img" src={this.state.athleteImg} />
 				</>
 			)
 		}
@@ -142,7 +172,7 @@ class SingleAthlete extends Component {
 			const athlete = this.props.athlete;
 			if(!this.state.isExpanded){
 				return (
-					<div className="col-6 athletes-box" onClick={this.toggleAttributes}>
+					<div className="athletes-box" onClick={this.toggleAttributes}>
 						{this.imgPositioning()}
 					</div>
 				)
@@ -152,7 +182,7 @@ class SingleAthlete extends Component {
 						<div key={athlete.lineup} className="dropdown-athlete">
 							{athlete.athlete_name}
 						</div>
-						<ul className="col-6 dropdown-attributes">
+						<ul className="dropdown-attributes">
 							{ athlete.piv          && <li><b>Win Points:</b> {athlete.piv}</li> }
 							{ athlete.record       && <li><b>Record:</b> {athlete.record}</li> }
 							{ athlete.age          && <li><b>Age:</b> {athlete.age}</li> }

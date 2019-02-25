@@ -17,7 +17,39 @@ body {
 }
 
 img.athlete-img {
-  height: 100px;
+  margin: 0 auto;
+  min-height: 120px;
+  -o-object-fit: cover;
+  object-fit: cover;
+  -o-object-position: top;
+  object-position: top;
+  max-height: 120px;
+}
+
+.versus-box{
+  text-transform: uppercase;
+  text-align: center;
+  align-self: stretch;
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 40%;
+  flex: 0 0 40%;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.vs {
+  color: grey;
+  font-size: 10px;
 }
 
 .dropdown-athlete {
