@@ -14,7 +14,6 @@ class App extends Component {
 	// Code is invoked after the component is mounted/inserted into the DOM tree.
 	componentDidMount() {
 		const url = "https://wagedwar.com/wp-json/athletes/v1/event?id=60";
-
 		fetch(url)
 			.then(result => result.json())
 			.then(result => {
@@ -60,6 +59,21 @@ const AthletesPaired = props => {
 }
 
 class AthletesBox extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			modals: this.props.pairedAthlete.map(() => false)
+		}
+	}
+
+	toggleModal = (index) => {
+		const modals = this.props.pairedAthlete.map(() => false)
+		modals[index] = true;
+		this.setState({
+			modals: modals
+		})
+	}
+
 	versusBox() {
 		return this.props.pairedAthlete.map((athlete, index) => {
 			if(index%2 === 0) {
@@ -90,14 +104,14 @@ class AthletesBox extends Component {
 							{this.versusBox()}
 						</div>
 						<div key={athlete.athlete_name} className="col-3">
-							<SingleAthlete athlete={athlete} />
+							<SingleAthlete idx={index} toggleModal={this.toggleModal} athlete={athlete} />
 						</div></>
 				)
 			}
 
 			return (<>
 					<div key={athlete.athlete_name} className="col-3">
-						<SingleAthlete athlete={athlete} />
+						<SingleAthlete idx={index} toggleModal={this.toggleModal} athlete={athlete} />
 					</div></>
 			)
 		});
@@ -112,77 +126,30 @@ class SingleAthlete extends Component {
 
 	constructor(props) {
     super(props)
-		this.state = {
-			isExpanded: false,
-			positionLeft: true,
-			athleteImg: leftImage
-		}
 
 		// This binding is necessary to make `this` work in the callback
 		this.toggleAttributes = this.toggleAttributes.bind(this);
 	}
 
-	componentDidMount() {
-		this.togglePositioning();
-	}
-
-	togglePositioning() {
-		// If Odd (1,3,5...)
-		if ( this.props.athlete.lineup %2 !== 0 ) {
-			this.setState(({
-				positionLeft: true,
-				athleteImg: leftImage
-			}));
-		} else {
-			this.setState(({
-				positionLeft: false,
-				athleteImg: rightImage
-			}));
-		}
-	}
-
 	toggleAttributes() {
-		this.setState(state => ({
-      isExpanded: !state.isExpanded
-    }));
-	}
-
-	imgPositioning() {
-		const athlete = this.props.athlete;
-		if (this.state.positionLeft) {
-			return (
-				<>
-					<img width="185" height="539" alt={athlete.athlete_name} className="athlete-img" src={this.state.athleteImg} />
-					<div className="dropdown-athlete">
-					</div>
-				</>
-			)
-		} else {
-			return (
-				<>
-					<div className="dropdown-athlete">
-					</div>
-					<img width="185" height="539" alt={athlete.athlete_name} className="athlete-img" src={this.state.athleteImg} />
-				</>
-			)
-		}
+		this.props.toggleModal(this.props.idx);
 	}
 
 	buildPair() {
 			const athlete = this.props.athlete;
-			if(!this.state.isExpanded){
+			//if(this.props.toggleModal){
+			if (true) {
 				return (
 					<div className="athletes-box" onClick={this.toggleAttributes}>
-						{this.imgPositioning()}
+						{this.positioning()}
 					</div>
 				)
 			} else {
 				return(
 					<div className="athletes-box" onClick={this.toggleAttributes}>
-						<div key={athlete.lineup} className="dropdown-athlete">
-							{athlete.athlete_name}
-						</div>
 						<ul className="dropdown-attributes">
+							<li className="closeBtn">[CLOSE]</li>
+							{ athlete.athlete_name && <li><b id="athlete-name">{athlete.athlete_name}</b></li> }
 							{ athlete.piv          && <li><b>Win Points:</b> {athlete.piv}</li> }
 							{ athlete.record       && <li><b>Record:</b> {athlete.record}</li> }
 							{ athlete.age          && <li><b>Age:</b> {athlete.age}</li> }
@@ -190,10 +157,28 @@ class SingleAthlete extends Component {
 							{ athlete.weight       && <li><b>Weight:</b> {athlete.weight}</li> }
 							{ athlete.reach        && <li><b>Reach:</b> {athlete.reach}</li> }
 							{ athlete.betting_odds && <li><b>Betting odds:</b> {athlete.betting_odds}</li> }
+							<button>CHOOSE</button>
 						</ul>
 					</div>
 				)
 			}
+	}
+
+	positioning() {
+		const athlete = this.props.athlete;
+		if ( this.props.athlete.lineup %2 !== 0 ) {
+			return (
+				<>
+					<img width="185" height="539" alt={athlete.athlete_name} className="athlete-img" src={leftImage} />
+				</>
+			)
+		} else {
+			return (
+				<>
+					<img width="185" height="539" alt={athlete.athlete_name} className="athlete-img" src={rightImage} />
+				</>
+			)
+		}
 	}
 
 	render() {

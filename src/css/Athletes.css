@@ -24,6 +24,7 @@ img.athlete-img {
   -o-object-position: top;
   object-position: top;
   max-height: 120px;
+  cursor: pointer;
 }
 
 .versus-box{
@@ -66,7 +67,27 @@ img.athlete-img {
 .dropdown-attributes {
   text-align: left;
   list-style-type: none;
-  width: 200px;
   margin: auto;
-  padding-left: 20px;
+  font-size: 0.8rem;
+  font-family: 'Klavika';
+  min-width: 200px;
+  background: #000000d1;
+  padding: 10px;
+  z-index: 999;
+  border-radius: 7px;
+  color: #fff;
+  width: auto;
+}
+
+li.closeBtn {
+  font-size: 10px;
+  color: #d6d6d6;
+  float: right;
+  cursor: pointer;
+}
+
+b#athlete-name {
+  font-size: 1rem;
+  text-transform: uppercase;
+  color: white;
 }
