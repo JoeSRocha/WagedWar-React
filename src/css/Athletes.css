@@ -12,7 +12,7 @@ body {
   font-family: 'KlavikaBold', 'Klavika', Helvetica, Arial, sans-serif;
 }
 
-.athletes-box {
+.athletes-box, .athletes-paired {
   display: flex;
 }
 
@@ -28,6 +28,7 @@ img.athlete-img {
   color: #000;
   cursor: pointer;
   text-transform: uppercase;
+  text-align: left;
 }
 
 .dropdown-attributes {

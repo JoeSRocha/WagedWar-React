@@ -26,47 +26,87 @@ class App extends Component {
 
 	render() {
 		const { data } = this.state;
-
 		return (
-				<Athlete athleteData={data} key={data.athlete_name} />
+				<AthletesPaired athleteData={data} />
 		);
 	}
 }
 
-const Athlete = props => {
+const AthletesPaired = props => {
+	var pairedAthletes = [];
+	var pairedAthlete = [];
+	const athletesPaired = props.athleteData.map((athlete, index) => {
+			// Pair up athletes
+			pairedAthlete.push(athlete);
+			// If even Index
+			if ( index%2 !== 0 ) {
+				pairedAthletes.push(pairedAthlete);
+				pairedAthlete = [];
+			}
+			if (pairedAthlete.length > 0) {
 
-	return props.athleteData.map((athlete) => {
-		return <AthleteBox key={athlete.athlete_name} athleteData={athlete} />
+				return (
+					<div key={index}>
+						<AthletesBox pairedAthlete={pairedAthlete} />
+					</div>
+				);
+			}
+
+			return null;
+
 	});
+
+	return <>{athletesPaired}</>
 }
 
-class AthleteBox extends Component {
+class AthletesBox extends Component {
+
+	constructor(props) {
+    super(props)
+	}
+
+	buildList(){
+		return this.props.pairedAthlete.map((athlete) => {
+			return (<div key={athlete.lineup}><SingleAthlete athlete={athlete} /></div>)
+		});
+	}
+
+	render () {
+		return <div className="col-12 athletes-paired">{this.buildList()}</div>;
+	}
+}
+
+class SingleAthlete extends Component {
 
 	constructor(props) {
     super(props)
 		this.state = {
 			isExpanded: false,
+			positionLeft: true,
 			athleteImg: leftImage
-		 }
+		}
 
 		// This binding is necessary to make `this` work in the callback
 		this.toggleAttributes = this.toggleAttributes.bind(this);
 	}
 
-	toggleImg() {
-		if ( this.props.athleteData.lineup %2 !== 0 ) {
+	componentDidMount() {
+		this.togglePositioning();
+	}
+
+	togglePositioning() {
+		// If Odd (1,3,5...)
+		if ( this.props.athlete.lineup %2 !== 0 ) {
 			this.setState(({
+				positionLeft: true,
 				athleteImg: leftImage
 			}));
 		} else {
 			this.setState(({
+				positionLeft: false,
 				athleteImg: rightImage
 			}));
 		}
-	}
-
-	componentDidMount() {
-		this.toggleImg();
 	}
 
 	toggleAttributes() {
@@ -75,87 +115,61 @@ class AthleteBox extends Component {
     }));
 	}
 
-
-	buildList(){
-		const athlete = this.props.athleteData;
-		if(this.state.isExpanded){
-
+	imgPositioning() {
+		const athlete = this.props.athlete;
+		if (this.state.positionLeft) {
 			return (
-				<div className="athletes-box" onClick={this.toggleAttributes}>
-					<div key={athlete.lineup} className="dropdown-athlete">
-						{athlete.athlete_name}
-					</div>
-					<ul className="dropdown-attributes">
-						{ athlete.piv          && <li><b>Win Points:</b> {athlete.piv}</li> }
-						{ athlete.record       && <li><b>Record:</b> {athlete.record}</li> }
-						{ athlete.age          && <li><b>Age:</b> {athlete.age}</li> }
-						{ athlete.nickname     && <li><b>Nickname:</b> {athlete.nickname}</li> }
-						{ athlete.weight       && <li><b>Weight:</b> {athlete.weight}</li> }
-						{ athlete.reach        && <li><b>Reach:</b> {athlete.reach}</li> }
-						{ athlete.betting_odds && <li><b>Betting odds:</b> {athlete.betting_odds}</li> }
-					</ul>
-				</div>
-			)
-		} else {
-			return (
-				<div className="athletes-box" onClick={this.toggleAttributes}>
-					<img alt="{athlete.athlete_name}" className="athlete-img" src={this.state.athleteImg} />
+				<>
+					<img alt={athlete.athlete_name} className="athlete-img" src={this.state.athleteImg} />
 					<div className="dropdown-athlete">
 						{athlete.athlete_name}
 					</div>
-				</div>
+				</>
+			)
+		} else {
+			return (
+				<>
+					<div className="dropdown-athlete">
+						{athlete.athlete_name}
+					</div>
+					<img alt={athlete.athlete_name} className="athlete-img" src={this.state.athleteImg} />
+				</>
 			)
 		}
 	}
 
-	render () {
-		return (
-			<>
-				{/* <>{this.buildList()}</> */}
-				<><AthletesPaired key={this.props.athleteData.lineup} athlete={this.buildList()} /></>
-			</>
-		);
-
-	}
-}
-
-class AthletesPaired extends Component {
-
-	constructor(props) {
-		super(props);
-		this.state = { athletesPaired: [] }
-	}
-
-	componentDidMount() {
-		const athlete = this.props.athlete;
-		const athletesPaired = this.state.athletesPaired;
-		console.log(athletesPaired);
-		if ( athletesPaired.length < 2 ) {
-			console.log(athlete);
-			this.setState({
-				athletesPaired: [ ...athletesPaired, athlete ]
-			})
-		} else {
-			this.setState({
-				athletesPaired: []
-			})
-		}
-	}
-
-	combinedAthletes() {
-		var athletesPaired = this.state.athletesPaired;
-
-		return (
-			<div className="athletes-paired">
-				{athletesPaired}
-			</div>
-		)
+	buildPair() {
+			const athlete = this.props.athlete;
+			if(!this.state.isExpanded){
+				return (
+					<div className="col-6 athletes-box" onClick={this.toggleAttributes}>
+						{this.imgPositioning()}
+					</div>
+				)
+			} else {
+				return(
+					<div className="athletes-box" onClick={this.toggleAttributes}>
+						<div key={athlete.lineup} className="dropdown-athlete">
+							{athlete.athlete_name}
+						</div>
+						<ul className="col-6 dropdown-attributes">
+							{ athlete.piv          && <li><b>Win Points:</b> {athlete.piv}</li> }
+							{ athlete.record       && <li><b>Record:</b> {athlete.record}</li> }
+							{ athlete.age          && <li><b>Age:</b> {athlete.age}</li> }
+							{ athlete.nickname     && <li><b>Nickname:</b> {athlete.nickname}</li> }
+							{ athlete.weight       && <li><b>Weight:</b> {athlete.weight}</li> }
+							{ athlete.reach        && <li><b>Reach:</b> {athlete.reach}</li> }
+							{ athlete.betting_odds && <li><b>Betting odds:</b> {athlete.betting_odds}</li> }
+						</ul>
+					</div>
+				)
+			}
 	}
 
 	render() {
-
-		return ( <>{this.combinedAthletes()}</>  );
+		return <>{this.buildPair()}</>;
 	}
+
 }
 
 export default App;
