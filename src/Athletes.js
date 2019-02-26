@@ -26,36 +26,57 @@ class App extends Component {
 	render() {
 		const { data } = this.state;
 		return (
-				<AthletesPaired athleteData={data} />
+				<AthletesPairing athleteData={data} />
 		);
 	}
 }
 
-const AthletesPaired = props => {
-	var pairedAthletes = [];
-	var pairedAthlete = [];
-	const athletesPaired = props.athleteData.map((athlete, index) => {
-			// Pair up athletes
+class AthletesPairing extends Component {
+	constructor(props) {
+		super(props)
+		this.state = {
+			modals: this.props.athleteData.map(() => false)
+		}
+	}
+
+	toggleModal = (index) => {
+		const modals = this.props.athleteData.map(() => false)
+		modals[index] = true;
+		this.setState({
+			modals: modals
+		})
+	}
+
+	athletesPaired() {
+		var pairedAthletes = [];
+		var pairedAthlete = [];
+		return this.props.athleteData.map((athlete, index) => {
+			// Pair up Athletes
 			pairedAthlete.push(athlete);
+
 			// If even Index
 			if ( index%2 !== 0 ) {
 				pairedAthletes.push(pairedAthlete);
 				pairedAthlete = [];
 			}
-			if (pairedAthlete.length > 0) {
 
+			if (pairedAthlete.length > 0) {
 				return (
 					<div key={index}>
-						<AthletesBox pairedAthlete={pairedAthlete} />
+						<AthletesBox toggleModal={this.toggleModal} pairedAthlete={pairedAthlete} />
 					</div>
 				);
 			}
 
 			return null;
+		});
+	}
 
-	});
-
-	return <>{athletesPaired}</>
+	render() {
+		console.log(this.state.modals);
+		console.log(this.props.athleteData.map(() => false));
+		return <>{this.athletesPaired()}</>
+	}
 }
 
 class AthletesBox extends Component {
@@ -64,14 +85,6 @@ class AthletesBox extends Component {
 		this.state = {
 			modals: this.props.pairedAthlete.map(() => false)
 		}
-	}
-
-	toggleModal = (index) => {
-		const modals = this.props.pairedAthlete.map(() => false)
-		modals[index] = true;
-		this.setState({
-			modals: modals
-		})
 	}
 
 	versusBox() {
@@ -104,14 +117,14 @@ class AthletesBox extends Component {
 							{this.versusBox()}
 						</div>
 						<div key={athlete.athlete_name} className="col-3">
-							<SingleAthlete idx={index} toggleModal={this.toggleModal} athlete={athlete} />
+							<SingleAthlete toggleModal={this.props.toggleModal} athlete={athlete} />
 						</div></>
 				)
 			}
 
 			return (<>
 					<div key={athlete.athlete_name} className="col-3">
-						<SingleAthlete idx={index} toggleModal={this.toggleModal} athlete={athlete} />
+						<SingleAthlete toggleModal={this.props.toggleModal} athlete={athlete} />
 					</div></>
 			)
 		});
@@ -132,12 +145,12 @@ class SingleAthlete extends Component {
 	}
 
 	toggleAttributes() {
-		this.props.toggleModal(this.props.idx);
+		this.props.toggleModal(this.props.athlete.lineup);
 	}
 
 	buildPair() {
 			const athlete = this.props.athlete;
-			//if(this.props.toggleModal){
+			//if(this.props.toggleModal[index]){
 			if (true) {
 				return (
 					<div className="athletes-box" onClick={this.toggleAttributes}>
