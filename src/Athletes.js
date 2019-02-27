@@ -35,15 +35,24 @@ class AthletesPairing extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			modals: this.props.athleteData.map(() => false)
+			modals: this.props.athleteData.map(() => false),
+			selected: this.props.athleteData.map(() => false)
 		}
 	}
 
-	toggleModal = (index) => {
+	toggleModal = (index, status) => {
 		const modals = this.props.athleteData.map(() => false)
-		modals[index] = true;
+		modals[index] = status ? 0 : 1;
 		this.setState({
 			modals: modals
+		})
+	}
+
+	selectAthlete = (index) => {
+		const selected = this.state.selected;
+		selected.push(index);
+		this.setState({
+			selected: selected
 		})
 	}
 
@@ -63,7 +72,13 @@ class AthletesPairing extends Component {
 			if (pairedAthlete.length > 0) {
 				return (
 					<div key={index}>
-						<AthletesBox toggleModal={this.toggleModal} pairedAthlete={pairedAthlete} />
+						<AthletesBox
+							modals={this.state.modals}
+							toggleModal={this.toggleModal}
+							pairedAthlete={pairedAthlete}
+							selectAthlete={this.selectAthlete}
+							selectedAthletes={this.state.selected}
+						/>
 					</div>
 				);
 			}
@@ -73,8 +88,6 @@ class AthletesPairing extends Component {
 	}
 
 	render() {
-		console.log(this.state.modals);
-		console.log(this.props.athleteData.map(() => false));
 		return <>{this.athletesPaired()}</>
 	}
 }
@@ -112,20 +125,32 @@ class AthletesBox extends Component {
 			// Add Versus Box
 			if ( index%2 !== 0 ) {
 
-				return (<>
+				return (<React.Fragment key={athlete.athlete_name}>
 						<div key={athlete.lineup}className="col-6 versus-box">
 							{this.versusBox()}
 						</div>
 						<div key={athlete.athlete_name} className="col-3">
-							<SingleAthlete toggleModal={this.props.toggleModal} athlete={athlete} />
-						</div></>
+							<SingleAthlete
+								modals={this.props.modals}
+								toggleModal={this.props.toggleModal}
+								athlete={athlete}
+								selectAthlete={this.props.selectAthlete}
+								selectedAthletes={this.props.selectAthletes}
+							/>
+						</div></React.Fragment>
 				)
 			}
 
-			return (<>
+			return (<React.Fragment key={athlete.athlete_name}>
 					<div key={athlete.athlete_name} className="col-3">
-						<SingleAthlete toggleModal={this.props.toggleModal} athlete={athlete} />
-					</div></>
+					<SingleAthlete
+								modals={this.props.modals}
+								toggleModal={this.props.toggleModal}
+								athlete={athlete}
+								selectAthlete={this.props.selectAthlete}
+								selectedAthletes={this.props.selectAthletes}
+							/>
+					</div></React.Fragment>
 			)
 		});
 	}
@@ -142,19 +167,33 @@ class SingleAthlete extends Component {
 
 		// This binding is necessary to make `this` work in the callback
 		this.toggleAttributes = this.toggleAttributes.bind(this);
+		this.chooseAthlete = this.chooseAthlete.bind(this);
 	}
 
+	// binded to parent
 	toggleAttributes() {
-		this.props.toggleModal(this.props.athlete.lineup);
+		this.props.toggleModal(this.props.athlete.lineup, this.props.modals[this.props.athlete.lineup]);
+	}
+
+	chooseAthlete() {
+		this.props.selectAthlete(this.props.athlete.lineup);
+	}
+
+	selected() {
+		// return this.props.selectAthletes.map((athlete_id) => {
+		// 	if (athlete_id === this.props.athlete.lineup) {
+		// 		return <div className="chosen">CHOSEN</div>
+		// 	}
+		// });
 	}
 
 	buildPair() {
 			const athlete = this.props.athlete;
-			//if(this.props.toggleModal[index]){
-			if (true) {
+			if(!this.props.modals[athlete.lineup]){
 				return (
 					<div className="athletes-box" onClick={this.toggleAttributes}>
 						{this.positioning()}
+						{this.selected()}
 					</div>
 				)
 			} else {
@@ -170,7 +209,7 @@ class SingleAthlete extends Component {
 							{ athlete.weight       && <li><b>Weight:</b> {athlete.weight}</li> }
 							{ athlete.reach        && <li><b>Reach:</b> {athlete.reach}</li> }
 							{ athlete.betting_odds && <li><b>Betting odds:</b> {athlete.betting_odds}</li> }
-							<button>CHOOSE</button>
+							<button onClick={this.chooseAthlete}>CHOOSE</button>
 						</ul>
 					</div>
 				)
