@@ -42,7 +42,7 @@ class AthletesPairing extends Component {
 
 	toggleModal = (index, status) => {
 		const modals = this.props.athleteData.map(() => false)
-		modals[index] = status ? 0 : 1;
+		modals[index] = status ? false : true;
 		this.setState({
 			modals: modals
 		})
@@ -135,7 +135,7 @@ class AthletesBox extends Component {
 								toggleModal={this.props.toggleModal}
 								athlete={athlete}
 								selectAthlete={this.props.selectAthlete}
-								selectedAthletes={this.props.selectAthletes}
+								selectedAthletes={this.props.selectedAthletes}
 							/>
 						</div></React.Fragment>
 				)
@@ -148,7 +148,7 @@ class AthletesBox extends Component {
 								toggleModal={this.props.toggleModal}
 								athlete={athlete}
 								selectAthlete={this.props.selectAthlete}
-								selectedAthletes={this.props.selectAthletes}
+								selectedAthletes={this.props.selectedAthletes}
 							/>
 					</div></React.Fragment>
 			)
@@ -164,56 +164,71 @@ class SingleAthlete extends Component {
 
 	constructor(props) {
     super(props)
+		this.state = {
+			isChosen: false
+		}
 
 		// This binding is necessary to make `this` work in the callback
 		this.toggleAttributes = this.toggleAttributes.bind(this);
 		this.chooseAthlete = this.chooseAthlete.bind(this);
 	}
 
-	// binded to parent
 	toggleAttributes() {
 		this.props.toggleModal(this.props.athlete.lineup, this.props.modals[this.props.athlete.lineup]);
 	}
 
 	chooseAthlete() {
 		this.props.selectAthlete(this.props.athlete.lineup);
+		this.setState({
+			isChosen: true
+		})
 	}
 
-	selected() {
-		// return this.props.selectAthletes.map((athlete_id) => {
-		// 	if (athlete_id === this.props.athlete.lineup) {
-		// 		return <div className="chosen">CHOSEN</div>
-		// 	}
-		// });
+	selectedAthlete() {
+		if (this.state.isChosen) {
+			return <div className="chosen">CHOSEN</div>
+		}
+	}
+
+	deselectAthlete() {
+		//this.props.selectAthlete(this.props.athlete.lineup);
+	}
+
+	chooseBtn() {
+		if ( this.state.isChosen ) {
+			return <button id="choose-btn" onClick={this.chooseAthlete}>DESELECT</button>
+		} else {
+			return <button id="choose-btn" onClick={this.chooseAthlete}>CHOOSE</button>
+		}
 	}
 
 	buildPair() {
-			const athlete = this.props.athlete;
-			if(!this.props.modals[athlete.lineup]){
-				return (
-					<div className="athletes-box" onClick={this.toggleAttributes}>
-						{this.positioning()}
-						{this.selected()}
-					</div>
-				)
-			} else {
-				return(
-					<div className="athletes-box" onClick={this.toggleAttributes}>
-						<ul className="dropdown-attributes">
-							<li className="closeBtn">[CLOSE]</li>
-							{ athlete.athlete_name && <li><b id="athlete-name">{athlete.athlete_name}</b></li> }
-							{ athlete.piv          && <li><b>Win Points:</b> {athlete.piv}</li> }
-							{ athlete.record       && <li><b>Record:</b> {athlete.record}</li> }
-							{ athlete.age          && <li><b>Age:</b> {athlete.age}</li> }
-							{ athlete.nickname     && <li><b>Nickname:</b> {athlete.nickname}</li> }
-							{ athlete.weight       && <li><b>Weight:</b> {athlete.weight}</li> }
-							{ athlete.reach        && <li><b>Reach:</b> {athlete.reach}</li> }
-							{ athlete.betting_odds && <li><b>Betting odds:</b> {athlete.betting_odds}</li> }
-							<button onClick={this.chooseAthlete}>CHOOSE</button>
-						</ul>
-					</div>
-				)
-			}
+		const athlete = this.props.athlete;
+		if(!this.props.modals[athlete.lineup]){
+			return (
+				<div className="athletes-box" onClick={this.toggleAttributes}>
+					{this.positioning()}
+					{this.selectedAthlete()}
+				</div>
+			)
+		} else {
+			return(
+				<div className="athletes-box" onClick={this.toggleAttributes}>
+					<ul className="dropdown-attributes">
+						<li className="closeBtn">[CLOSE]</li>
+						{ athlete.athlete_name && <li><b id="athlete-name">{athlete.athlete_name}</b></li> }
+						{ athlete.piv          && <li><b>Win Points:</b> {athlete.piv}</li> }
+						{ athlete.record       && <li><b>Record:</b> {athlete.record}</li> }
+						{ athlete.age          && <li><b>Age:</b> {athlete.age}</li> }
+						{ athlete.nickname     && <li><b>Nickname:</b> {athlete.nickname}</li> }
+						{ athlete.weight       && <li><b>Weight:</b> {athlete.weight}</li> }
+						{ athlete.reach        && <li><b>Reach:</b> {athlete.reach}</li> }
+						{ athlete.betting_odds && <li><b>Betting odds:</b> {athlete.betting_odds}</li> }
+						{ this.chooseBtn() }
+					</ul>
+				</div>
+			)
+		}
 	}
 
 	positioning() {
