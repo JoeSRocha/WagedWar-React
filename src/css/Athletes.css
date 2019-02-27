@@ -19,14 +19,14 @@ body {
 .chosen {
   position: absolute;
   padding: 5px 10px;
-  background: red;
+  background: #cc1212;
   color: #fff;
   top: 50px;
   left: 30px;
 }
 
 button#choose-btn {
-  background: #de1f00;
+  background: #cc1212;
   font-family: KlavikaBold;
   width: 100%;
   margin-top: 10px;
