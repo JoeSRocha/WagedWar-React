@@ -35,9 +35,9 @@ class Athletes extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			modals: this.props.athleteData.map(() => false),
-			selected: this.props.athleteData.map(() => false),
-			selectedCount: 0
+			modals:     this.props.athleteData.map(() => false),
+			selected:   this.props.athleteData.map(() => false),
+			isDisabled: this.props.athleteData.map(() => false),
 		}
 	}
 
@@ -49,12 +49,24 @@ class Athletes extends Component {
 		})
 	}
 
+	disableAthletes() {
+		const isDisabled = [];
+		this.props.athleteData.map((athlete) => {
+			console.log(this.state.selected.includes(athlete.lineup));
+			console.log(athlete.lineup);
+			( this.state.selected.includes(athlete.lineup) ) ? isDisabled.push(false) : isDisabled.push(true);
+			return isDisabled;
+		});
+		console.log(isDisabled);
+	}
+
 	selectAthlete = (index) => {
 		const selected = this.state.selected;
 		selected.push(index);
 		this.setState({
 			selected: selected
 		})
+		this.disableAthletes();
 	}
 
 	athletesPaired() {
@@ -203,9 +215,9 @@ class SingleAthlete extends Component {
 	}
 
 	disableAtSix() {
-		if( this.props.selectedAthletes.length >= 6 && !this.state.isChosen ) {
+		if( this.props.selectedAthletes.length >= 6 ) {
 			console.log('Disable at 6');
-			return true;
+			// Disable all other athletes NOT selected
 		}
 	}
 
