@@ -110,7 +110,7 @@ class Athletes extends Component {
 	}
 
 	render() {
-		return <>{this.athletesPaired()}</>
+		return <div className="container">{this.athletesPaired()}</div>
 	}
 }
 
@@ -179,7 +179,7 @@ class AthletesBox extends Component {
 	}
 
 	render () {
-		return <div className="col-12 athletes-paired">{this.buildList()}</div>;
+		return <div className="row athletes-paired">{this.buildList()}</div>;
 	}
 }
 
@@ -188,7 +188,7 @@ class SingleAthlete extends Component {
 	constructor(props) {
     super(props)
 		this.state = {
-			isChosen:     false,
+			isChosen: false,
 		}
 		// This binding is necessary to make `this` work in the callback
 		this.toggleAttributes = this.toggleAttributes.bind(this);
@@ -203,7 +203,7 @@ class SingleAthlete extends Component {
 
 	selectedAthlete() {
 		if (this.state.isChosen) {
-			return <div className="chosen">CHOSEN</div>
+			return <div className={(this.isLeft() ? 'chosen-left' : 'chosen-right')}>CHOSEN</div>
 		}
 	}
 
@@ -249,7 +249,6 @@ class SingleAthlete extends Component {
 				<>
 					<div className="athletes-box"
 						onClick={this.toggleAttributes}
-						disabled="true"
 					>
 						{this.positioning()}
 						{this.selectedAthlete()}
@@ -259,7 +258,8 @@ class SingleAthlete extends Component {
 		} else {
 			return(
 				<div className="athletes-box" onClick={this.toggleAttributes}>
-					<ul className="dropdown-attributes">
+				{this.positioning()}
+					<ul className={(this.isLeft() ? 'dropdown-attributes-left' :'dropdown-attributes')}>
 						<li className="closeBtn">[CLOSE]</li>
 						{ athlete.athlete_name && <li><b id="athlete-name">{athlete.athlete_name}</b></li> }
 						{ athlete.piv          && <li><b>Win Points:</b> {athlete.piv}</li> }
@@ -273,6 +273,14 @@ class SingleAthlete extends Component {
 					</ul>
 				</div>
 			)
+		}
+	}
+
+	isLeft(){
+		if ( this.props.athlete.lineup %2 !== 0 ) {
+			return true;
+		}else {
+			return false;
 		}
 	}
 
