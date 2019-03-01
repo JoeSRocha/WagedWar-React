@@ -35,9 +35,9 @@ class Athletes extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			modals:     this.props.athleteData.map(() => false),
-			selected:   this.props.athleteData.map(() => false),
-			isDisabled: this.props.athleteData.map(() => false),
+			modals:       this.props.athleteData.map(() => false),
+			selected:     this.props.athleteData.map(() => false),
+			listDisabled: this.props.athleteData.map(() => false),
 		}
 	}
 
@@ -49,24 +49,31 @@ class Athletes extends Component {
 		})
 	}
 
-	disableAthletes() {
-		const isDisabled = [];
-		this.props.athleteData.map((athlete) => {
-			console.log(this.state.selected.includes(athlete.lineup));
-			console.log(athlete.lineup);
-			( this.state.selected.includes(athlete.lineup) ) ? isDisabled.push(false) : isDisabled.push(true);
-			return isDisabled;
-		});
-		console.log(isDisabled);
+	checkSelectedCount() {
+		if (this.state.selected.length >= 6) {
+			const listDisabled = [];
+			this.props.athleteData.map((athlete) => {
+				( this.state.selected.includes(athlete.lineup) ) ? listDisabled.push(false) : listDisabled.push(true);
+				return listDisabled;
+			});
+			this.setState({
+				listDisabled: listDisabled
+			});
+		}
 	}
 
-	selectAthlete = (index) => {
-		const selected = this.state.selected;
-		selected.push(index);
+	selectAthlete = (index, status) => {
+		console.log(status);
+		let selected = this.state.selected;
+		if (status === true ) {
+			selected.push(index);
+		} else { // remove from list
+			selected = selected.filter(e => e !== index);
+		}
 		this.setState({
 			selected: selected
 		})
-		this.disableAthletes();
+		this.checkSelectedCount();
 	}
 
 	athletesPaired() {
@@ -92,6 +99,7 @@ class Athletes extends Component {
 							pairedAthlete={pairedAthlete}
 							selectAthlete={this.selectAthlete}
 							selectedAthletes={this.state.selected}
+							listDisabled={this.state.listDisabled}
 						/>
 					</div>
 				);
@@ -149,6 +157,7 @@ class AthletesBox extends Component {
 								athlete={athlete}
 								selectAthlete={this.props.selectAthlete}
 								selectedAthletes={this.props.selectedAthletes}
+								listDisabled={this.props.listDisabled}
 							/>
 						</div></React.Fragment>
 				)
@@ -162,6 +171,7 @@ class AthletesBox extends Component {
 								athlete={athlete}
 								selectAthlete={this.props.selectAthlete}
 								selectedAthletes={this.props.selectedAthletes}
+								listDisabled={this.props.listDisabled}
 							/>
 					</div></React.Fragment>
 			)
@@ -178,10 +188,8 @@ class SingleAthlete extends Component {
 	constructor(props) {
     super(props)
 		this.state = {
-			isChosen: false,
-			chosenCount: 0
+			isChosen:     false,
 		}
-
 		// This binding is necessary to make `this` work in the callback
 		this.toggleAttributes = this.toggleAttributes.bind(this);
 		this.chooseAthlete    = this.chooseAthlete.bind(this);
@@ -193,7 +201,6 @@ class SingleAthlete extends Component {
 		this.props.toggleModal(this.props.athlete.lineup, this.props.modals[this.props.athlete.lineup]);
 	}
 
-
 	selectedAthlete() {
 		if (this.state.isChosen) {
 			return <div className="chosen">CHOSEN</div>
@@ -201,42 +208,48 @@ class SingleAthlete extends Component {
 	}
 
 	chooseAthlete() {
-		this.props.selectAthlete(this.props.athlete.lineup);
 		this.setState({
 			isChosen: true
 		})
-		this.disableAtSix();
+		this.props.selectAthlete(this.props.athlete.lineup, true);
 	}
 
 	deselectAthlete() {
 		this.setState({
 			isChosen: false
 		})
+		this.props.selectAthlete(this.props.athlete.lineup, false);
 	}
 
 	disableAtSix() {
 		if( this.props.selectedAthletes.length >= 6 ) {
-			console.log('Disable at 6');
-			// Disable all other athletes NOT selected
+			const athleteID = (this.props.athlete.lineup - 1);
+			if (true === this.props.listDisabled[athleteID]) {
+				return true;
+			}
 		}
 	}
 
 	chooseBtn() {
+		const athleteID = (this.props.athlete.lineup - 1);
 		if ( this.state.isChosen ) {
 			return <button id="choose-btn" onClick={this.deselectAthlete}>DESELECT</button>
-		} else {
+		} else if (true === this.props.listDisabled[athleteID] && this.props.selectedAthletes.length >= 6) {
+			return null
+		} else  {
 			return <button id="choose-btn" onClick={this.chooseAthlete}>CHOOSE</button>
 		}
 	}
 
 	buildPair() {
 		const athlete = this.props.athlete;
+
 		if(!this.props.modals[athlete.lineup]){
 			return (
 				<>
 					<div className="athletes-box"
-						disabled={this.disableAtSix}
 						onClick={this.toggleAttributes}
+						disabled="true"
 					>
 						{this.positioning()}
 						{this.selectedAthlete()}
