@@ -12,6 +12,22 @@ body {
   font-family: 'KlavikaBold', 'Klavika', Helvetica, Arial, sans-serif;
 }
 
+#counter {
+  color: #fff;
+  z-index: 50;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 600;
+  font-size: 29px;
+  background: #ce2424;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  left: 0;
+  bottom: 0px;
+  height: 45px;
+}
+
 .athletes-box, .athletes-paired {
   display: flex;
 }

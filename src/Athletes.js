@@ -110,7 +110,12 @@ class Athletes extends Component {
 	}
 
 	render() {
-		return <div className="container">{this.athletesPaired()}</div>
+		return (
+		<div className="container">
+			{this.athletesPaired()}
+			<div id='counter'>{this.state.selected.length}/6 CHOSEN</div>
+		</div>
+			)
 	}
 }
 
