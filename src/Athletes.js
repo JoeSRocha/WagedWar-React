@@ -114,6 +114,7 @@ class Athletes extends Component {
 		<div className="container">
 			{this.athletesPaired()}
 			<div id='counter'>{this.state.selected.length}/6 CHOSEN</div>
+			<br/><br/>
 		</div>
 			)
 	}
@@ -132,7 +133,7 @@ class AthletesBox extends Component {
 			if(index%2 === 0) {
 				return(
 					<>
-						<div className="vs">{athlete.weight_class}</div>
+						<div className="vs">{athlete.weight_class} DIVISION</div>
 						<div className="athlete-name">{athlete.athlete_name}</div>
 						<div className="vs">VS</div>
 					</>
@@ -240,7 +241,7 @@ class SingleAthlete extends Component {
 		if ( this.state.isChosen ) {
 			return <button id="choose-btn" onClick={this.deselectAthlete}>DESELECT</button>
 		} else if (true === this.props.listDisabled[athleteID] && this.props.selectedAthletes.length >= 6) {
-			return null
+			return <div id="deselct-msg">DESELECT CHOSEN TO SELECT</div>
 		} else  {
 			return <button id="choose-btn" onClick={this.chooseAthlete}>CHOOSE</button>
 		}
@@ -294,13 +295,13 @@ class SingleAthlete extends Component {
 		if ( this.props.athlete.lineup %2 !== 0 ) {
 			return (
 				<>
-					<img width="185" height="539" alt={athlete.athlete_name} className="athlete-img" src={leftImage} />
+					<img width="185" height="539" alt={athlete.athlete_name} className={'athlete-img' + (this.state.isChosen ? ' active':'')} src={(athlete.ext_athlete_image ? athlete.ext_athlete_image : leftImage )} />
 				</>
 			)
 		} else {
 			return (
 				<>
-					<img width="185" height="539" alt={athlete.athlete_name} className="athlete-img" src={rightImage} />
+					<img width="185" height="539" alt={athlete.athlete_name} className={'athlete-img' + (this.state.isChosen ? ' active':'')} src={(athlete.ext_athlete_image ? athlete.ext_athlete_image : rightImage )} />
 				</>
 			)
 		}
