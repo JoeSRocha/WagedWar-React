@@ -13,7 +13,7 @@ class App extends Component {
 
 	// Code is invoked after the component is mounted/inserted into the DOM tree.
 	componentDidMount() {
-		const url = "https://wagedwar.com/wp-json/athletes/v1/event?id=63";
+		const url = "https://wagedwar.com/wp-json/athletes/v1/event?id=66";
 		fetch(url)
 			.then(result => result.json())
 			.then(result => {
@@ -92,16 +92,15 @@ class Athletes extends Component {
 
 			if (pairedAthlete.length > 0) {
 				return (
-					<div key={index}>
-						<AthletesBox
+					<AthletesBox
 							modals={this.state.modals}
 							toggleModal={this.toggleModal}
 							pairedAthlete={pairedAthlete}
 							selectAthlete={this.selectAthlete}
 							selectedAthletes={this.state.selected}
 							listDisabled={this.state.listDisabled}
+							key={athlete.lineup + '&' + (parseInt(athlete.lineup) + 1)}
 						/>
-					</div>
 				);
 			}
 
@@ -132,11 +131,11 @@ class AthletesBox extends Component {
 		return this.props.pairedAthlete.map((athlete, index) => {
 			if(index%2 === 0) {
 				return(
-					<>
+					<div key={'versus_txt_' + athlete.athlete_name}>
 						<div className="vs">{athlete.weight_class} DIVISION</div>
 						<div className="athlete-name">{athlete.athlete_name}</div>
 						<div className="vs">VS</div>
-					</>
+					</div>
 				)
 			} else {
 				return(
@@ -152,11 +151,11 @@ class AthletesBox extends Component {
 
 			// Add Versus Box
 			if ( index%2 !== 0 ) {
-				return (<React.Fragment key={athlete.athlete_name}>
-						<div key={athlete.lineup}className="col-6 versus-box">
+				return (<React.Fragment key={'vs_' + athlete.athlete_name}>
+						<div className="col-6 versus-box">
 							{this.versusBox()}
 						</div>
-						<div key={athlete.athlete_name} className="col-3">
+						<div className="col-3">
 							<SingleAthlete
 								modals={this.props.modals}
 								toggleModal={this.props.toggleModal}
@@ -164,13 +163,14 @@ class AthletesBox extends Component {
 								selectAthlete={this.props.selectAthlete}
 								selectedAthletes={this.props.selectedAthletes}
 								listDisabled={this.props.listDisabled}
+								key={athlete.athlete_name}
 							/>
 						</div></React.Fragment>
 				)
 			}
 
-			return (<React.Fragment key={athlete.athlete_name}>
-					<div key={athlete.athlete_name} className="col-3">
+			return (<React.Fragment key={'vs_' + athlete.athlete_name}>
+					<div className="col-3">
 					<SingleAthlete
 								modals={this.props.modals}
 								toggleModal={this.props.toggleModal}
@@ -178,6 +178,7 @@ class AthletesBox extends Component {
 								selectAthlete={this.props.selectAthlete}
 								selectedAthletes={this.props.selectedAthletes}
 								listDisabled={this.props.listDisabled}
+								key={athlete.athlete_name}
 							/>
 					</div></React.Fragment>
 			)
@@ -185,7 +186,7 @@ class AthletesBox extends Component {
 	}
 
 	render () {
-		return <div className="row athletes-paired">{this.buildList()}</div>;
+		return <div key={this.athlete} className="row athletes-paired">{this.buildList()}</div>;
 	}
 }
 
